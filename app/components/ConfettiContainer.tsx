@@ -14,8 +14,8 @@ const ConfettiContainer = () => {
     const handleResize = () => {
       const { innerWidth, innerHeight } = window;
       setWindowDimensions({
-        width: innerWidth - 20,
-        height: innerHeight - 20,
+        width: innerWidth - 10,
+        height: innerHeight - 10,
       });
     };
 
@@ -26,13 +26,14 @@ const ConfettiContainer = () => {
     const intervalId = setInterval(() => {
       const { timeNow } = holyHour();
       const isHolyHour = timeNow.toFormat("HH:mm").includes(HOLY_HOUR_STRING);
-
       setIsHoly(isHolyHour);
     }, 1000);
     return () => {
       clearInterval(intervalId), removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [isHoly]);
+
+  
 
   return (
     <>

@@ -5,7 +5,7 @@ const User = g
   .model("User", {
     name: g.string().length({ min: 3, max: 20 }),
     displayName: g.string().length({ min: 3, max: 15 }),
-    email: g.email(),
+    email: g.string().unique(),
     avatarUrl: g.url(),
   })
   .auth((rules) => {
@@ -15,15 +15,13 @@ const User = g
 // @ts-ignore
 const jwt = auth.JWT({
   issuer: "grafbase",
-  secret: process.env.NEXTAUTH_SECRET as string,
+  secret: g.env("NEXTAUTH_SECRET"),
 });
 
 export default config({
   schema: g,
   auth: {
     providers: [jwt],
-    rules: (rules) => {
-      rules.private();
-    },
+    rules: (rules) => rules.private(),
   },
 });

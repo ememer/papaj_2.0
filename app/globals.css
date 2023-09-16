@@ -13,3 +13,21 @@
     inset -20px 0 80px #0ff, inset 20px 0 300px #f0f, inset -20px 0 300px #0ff,
     0 0 50px #fff, -10px 0 80px #f0f, 10px 0 80px #0ff;
 }
+
+.button {
+  @apply w-8 h-8 p-2 rounded-full bg-gradient-to-br from-violet-400 to-70% to-violet-500 shadow-sm;
+  box-shadow: inset 0 0 0 #fff;
+  transition: box-shadow 600ms ease;
+}
+
+.button:hover {
+  box-shadow: inset 0 0 10px #fff, inset 10px 0 20px #f0f,
+    inset -10px 0 20px #0ff, inset 10px 0 100px #f0f, inset -10px 0 100px #0ff,
+    0 0 10px #fff, -5px 0 20px #f0f, 5px 0 20px #0ff;
+}
+
+.userProfileAvatar {
+  box-shadow: inset 0 0 10px #fff, inset 10px 0 20px #f0f,
+    inset -10px 0 20px #0ff, inset 10px 0 100px #f0f, inset -10px 0 100px #0ff,
+    0 0 10px #fff, -5px 0 20px #f0f, 5px 0 20px #0ff;
+}
