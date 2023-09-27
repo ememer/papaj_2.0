@@ -13,6 +13,23 @@ const User = g
   });
 
 // @ts-ignore
+const Meetings = g
+  .model("Meetings", {
+    createdBy: g.relation(() => User),
+    date: g.string().optional(),
+    range: g.string().optional().list().optional(),
+    rescheduleDate: g.string().optional(),
+    rescheduleRange: g.string().optional(),
+    isAnnounced: g.boolean().default(false),
+    acceptedBy: g.string().optional().list().optional(),
+    rejectedBy: g.string().optional().list().optional(),
+  })
+  .auth((rules) => {
+    rules.private().read();
+    rules.private().create().delete().update();
+  });
+
+// @ts-ignore
 const jwt = auth.JWT({
   issuer: "grafbase",
   secret: g.env("NEXTAUTH_SECRET"),

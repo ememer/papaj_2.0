@@ -16,7 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-gradient-to-br from-mirage-800 to-purple-700 via-70% text-gray-300">
         <Header />
-        <main className="min-h-90-screen mx-auto">{children}</main>
+        <main className="min-h-90-screen mx-auto container">{children}</main>
       </body>
     </html>
   );

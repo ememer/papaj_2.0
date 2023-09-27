@@ -15,6 +15,7 @@ const createScreenHeightsClasses = (screenUnit: string, name: string) => ({
   ),
 });
 
+
 const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",

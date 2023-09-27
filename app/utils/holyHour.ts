@@ -4,8 +4,8 @@ export const HOLY_HOUR_STRING = "21:37";
 
 export const holyHour = () => {
   const holyHour = DateTime.now().set({
-    hour: 21,
-    minute: 37,
+    hour: parseInt(HOLY_HOUR_STRING.split(":")[0]),
+    minute: parseInt(HOLY_HOUR_STRING.split(":")[1]),
     second: 0,
     millisecond: 0,
   });

@@ -31,3 +31,41 @@
     inset -10px 0 20px #0ff, inset 10px 0 100px #f0f, inset -10px 0 100px #0ff,
     0 0 10px #fff, -5px 0 20px #f0f, 5px 0 20px #0ff;
 }
+
+/* #7e22ce */
+
+.rhap_container {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  font-family: inherit;
+  width: 100%;
+  padding: 10px 15px;
+  background-color: rgba(219, 162, 255, 0.854) !important;
+  border-radius: 10px;
+  box-shadow: 0 0 5px #fff, 3px 0 6px #f0f, -3px 0 6px #0ff !important;
+}
+
+.rhap_volume-indicator,
+.rhap_progress-indicator {
+  background: #0ff !important;
+}
+
+.rhap_time {
+  color: #fff !important;
+}
+
+.rhap_repeat-button svg,
+.rhap_volume-button svg,
+.rhap_main-controls-button svg {
+  color: #fff !important;
+}
+
+.rhap_progress-filled {
+  background: #f0f !important;
+}
+
+.rhap_button-clear.rhap_volume-button {
+  fill: #0ff !important;
+}

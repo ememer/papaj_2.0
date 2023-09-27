@@ -1,4 +1,13 @@
-import { createUserMutation, getUserQuery } from "@/graphql";
+import { SessionInterface } from "@/common.types";
+import {
+  createNewMeetingMutation,
+  createUserMutation,
+  deleteMeetingDate,
+  getNewMeetingDate,
+  getUserCollectionQuery,
+  getUserQuery,
+  updateMeetingQuery,
+} from "@/graphql";
 import { GraphQLClient } from "graphql-request";
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -48,11 +57,71 @@ export const createUser = (
   return makeGraphqlRequest(createUserMutation, variables);
 };
 
-// export const fetchToken = async () => {
-//   try {
-//     const response = await fetch(`${SERVER_URL}/api/auth/token`);
-//     return response.json();
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+export const getUserCollection = (id: Array<string>) => {
+  client.setHeader("x-api-key", API_KEY);
+  const variables = {
+    id: id,
+  };
+  return makeGraphqlRequest(getUserCollectionQuery, variables);
+};
+
+export const createNewMeeting = (
+  userId: string,
+  dateString: string,
+  start: Date | null,
+  end: Date | null,
+  token: string
+) => {
+  client.setHeader("Authorization", `Bearer ${token}`);
+  const variables = {
+    input: {
+      createdBy: {
+        link: userId,
+      },
+      date: dateString,
+      range: [start, end],
+      acceptedBy: [userId],
+    },
+  };
+
+  return makeGraphqlRequest(createNewMeetingMutation, variables);
+};
+
+export const getLatestMeeting = () => {
+  client.setHeader("x-api-key", API_KEY);
+  return makeGraphqlRequest(getNewMeetingDate);
+};
+
+export const fetchToken = async () => {
+  try {
+    const response = await fetch(`${SERVER_URL}/api/auth/token`);
+    return response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const handleDelete = async (id: string, token: string) => {
+  client.setHeader("Authorization", `Bearer ${token}`);
+
+  return makeGraphqlRequest(deleteMeetingDate, { id });
+};
+
+export const updateMeeting = async (
+  id: string,
+  isPublised: boolean = true,
+  acceptedId: Array<string> | null = null,
+  rejectedID: Array<string> | null = null,
+  token: string
+) => {
+  client.setHeader("Authorization", `Bearer ${token}`);
+  const variables = {
+    id: id,
+    input: {
+      isAnnounced: isPublised,
+      acceptedBy: acceptedId,
+      rejectedBy: rejectedID,
+    },
+  };
+  return makeGraphqlRequest(updateMeetingQuery, variables);
+};

@@ -33,7 +33,7 @@ const ClockDiff = () => {
   }, []);
 
   const timeInPercentage = () => {
-    return (100 - (clockDiffMillis * 100) / 86400000).toFixed(2);
+    return `${(100 - (clockDiffMillis * 100) / 86430000)}`;
   };
 
   return (
@@ -58,7 +58,7 @@ const ClockDiff = () => {
             />
           </div>
           <div className="text-center">
-            <code className="text-white-200">{`${timeInPercentage()}%`}</code>
+            <code className="text-white-200">{`${parseFloat(timeInPercentage()).toFixed(2)}%`}</code>
           </div>
         </>
       )}
