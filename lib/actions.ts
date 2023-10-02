@@ -9,6 +9,7 @@ import {
   getUserQuery,
   publishMeetingReschedule,
   updateMeetingQuery,
+  updateRescheduleVotes,
 } from "@/graphql";
 import { GraphQLClient } from "graphql-request";
 
@@ -162,4 +163,19 @@ export const createReschedulesVotes = async (
   };
 
   return makeGraphqlRequest(createManyReschedulesDates, variables);
+};
+
+export const updateVotes = async (
+  token: string,
+  rescheduleId: string,
+  votes: string[]
+) => {
+  client.setHeader("Authorization", `Bearer ${token}`);
+  const variables = {
+    id: rescheduleId,
+    input: {
+      votes: [...votes],
+    },
+  };
+  return makeGraphqlRequest(updateRescheduleVotes, variables);
 };

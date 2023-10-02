@@ -131,3 +131,12 @@ query UserCollection($id: [ID!]) {
   }
 }
 `;
+
+export const updateRescheduleVotes = `
+mutation ReschedulesUpdate($id: ID, $input: ReschedulesUpdateInput!) {
+  reschedulesUpdate(by: {id: $id}, input: $input) {
+    reschedules {
+      votes
+    }
+  }
+}`;

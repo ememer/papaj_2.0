@@ -110,8 +110,9 @@ const MeetingHeading = ({ meetings, user }: Props) => {
               />
               {meetings?.rejectedBy?.includes(userId) && (
                 <RescheduleMeeting
-                rescheduledDays={meetings?.reschedules?.edges}
+                  rescheduledDays={meetings?.reschedules?.edges}
                   isRescheduled={meetings?.isRescheduled}
+                  userId={userId}
                   meetingId={meetings?.id}
                 />
               )}

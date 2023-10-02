@@ -25,10 +25,12 @@ const RescheduleMeeting = ({
   isRescheduled,
   meetingId,
   rescheduledDays,
+  userId,
 }: {
   rescheduledDays: MeetingInterface["reschedules"]["edges"];
   isRescheduled: boolean;
   meetingId: string;
+  userId: string;
 }) => {
   const router = useRouter();
   const [rescheduleProposa, setRescheduleProposal] = useState(false);
@@ -62,13 +64,14 @@ const RescheduleMeeting = ({
           )
             .setLocale("pl")
             .toFormat("cccc"),
-          votes: [],
+          votes: [...(date?.node?.votes ?? [])],
           rescheduleId: date?.node?.id,
         }))
       );
     }
-  }, []);
+  }, [rescheduledDays]);
 
+  
   const isGenerated = generateDates && avaliableGeneratedDates.length !== 0;
   const isRescheduledVotes =
     isRescheduled && avaliableGeneratedDates.length !== 0;
@@ -99,6 +102,7 @@ const RescheduleMeeting = ({
               buttonsEnable={isRescheduled}
               votes={dates?.votes}
               rescheduleId={dates?.rescheduleId}
+              userId={userId}
             />
           ))}
         </div>
@@ -122,18 +126,20 @@ const RescheduleMeeting = ({
           {!isUpdating ? "Rozpocznij głosowanie" : "Inicuje głosowanie..."}
         </button>
       )}
-      <button
-        onClick={() => {
-          setRescheduleProposal((prevState) => !prevState);
-          setGenerateDates((prevState) => !prevState);
-        }}
-        className={clsx(
-          rescheduleProposa ? "button_warning" : "button_action",
-          "block m-auto text-slate-800 font-semibold w-3/4 my-8 "
-        )}
-      >
-        {rescheduleProposa ? "Jednak się rozmyśliłem" : "Veto! Inny termin"}
-      </button>
+      {(avaliableGeneratedDates.length === 0 || !isRescheduled) && (
+        <button
+          onClick={() => {
+            setRescheduleProposal((prevState) => !prevState);
+            setGenerateDates((prevState) => !prevState);
+          }}
+          className={clsx(
+            rescheduleProposa ? "button_warning" : "button_action",
+            "block m-auto text-slate-800 font-semibold w-3/4 my-8 "
+          )}
+        >
+          {rescheduleProposa ? "Jednak się rozmyśliłem" : "Veto! Inny termin"}
+        </button>
+      )}
     </>
   );
 };
