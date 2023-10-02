@@ -26,6 +26,7 @@ const MeetingRescheduleProposal = ({
   useEffect(() => {
     const runPing = async () => {
       await sleep(1000);
+      router.refresh();
       setIsClicked(false);
     };
     if (isClicked) {
@@ -52,7 +53,7 @@ const MeetingRescheduleProposal = ({
               rescheduleId as string,
               [...(votes as string[]), userId] as string[]
             ).finally(() => {
-              setIsClicked(true), router.refresh();
+              setIsClicked(true);
             });
           }}
           className={clsx(
