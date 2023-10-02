@@ -23,10 +23,18 @@ export type MeetingInterface = {
   id: string;
   date?: string;
   range?: Array<string> | Array<null>;
-  rescheduleDate?: string | null;
-  rescheduleRange?: string | null;
+  isRescheduled: boolean;
   isAnnounced: boolean;
   createdAt: string;
+  reschedules: {
+    edges: {
+      node: {
+        date: string;
+        votes?: string[];
+        id: string
+      };
+    }[];
+  };
   acceptedBy: [string];
   rejectedBy: [string];
 };

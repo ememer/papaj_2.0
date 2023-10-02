@@ -13,16 +13,32 @@ const User = g
   });
 
 // @ts-ignore
+const Reschedules = g
+  .model("Reschedules", {
+    date: g.string(),
+    votes: g.string().optional().list().optional(),
+    meeting: g.relation(() => Meetings).optional(),
+  })
+  .auth((rules) => {
+    rules.private().read();
+    rules.private().create().update().delete();
+  });
+
+// @ts-ignore
 const Meetings = g
   .model("Meetings", {
     createdBy: g.relation(() => User),
     date: g.string().optional(),
     range: g.string().optional().list().optional(),
-    rescheduleDate: g.string().optional(),
-    rescheduleRange: g.string().optional(),
+    isRescheduled: g.boolean().default(false),
     isAnnounced: g.boolean().default(false),
     acceptedBy: g.string().optional().list().optional(),
     rejectedBy: g.string().optional().list().optional(),
+    reschedules: g
+      .relation(() => Reschedules)
+      .optional()
+      .list()
+      .optional(),
   })
   .auth((rules) => {
     rules.private().read();

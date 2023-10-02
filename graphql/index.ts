@@ -11,6 +11,18 @@ export const createUserMutation = `mutation CreateUser($input: UserCreateInput!)
     }
 `;
 
+export const createManyReschedulesDates = `
+mutation ReschedulesCreateMany($input: [ReschedulesCreateManyInput!]!) {
+  reschedulesCreateMany(input: $input) {
+    reschedulesCollection {
+      date
+      meeting {
+        id
+      }
+    }
+  }
+}`;
+
 export const createNewMeetingMutation = `mutation MeetingsCreate($input: MeetingsCreateInput!) {
     meetingsCreate(input: $input) {
       meetings {
@@ -51,8 +63,7 @@ query MeetingsCollection {
             createdAt
             date
             range
-            rescheduleDate
-            rescheduleRange
+            isRescheduled
             isAnnounced
             acceptedBy
             rejectedBy
@@ -61,6 +72,15 @@ query MeetingsCollection {
               displayName
               avatarUrl
               email
+            }
+            reschedules(last: 14) {
+              edges {
+                node {
+                  date
+                  votes
+                  id
+                }
+              }
             }
           }
         }
@@ -83,6 +103,16 @@ mutation MeetingsUpdate($id: ID!, $input: MeetingsUpdateInput!) {
         isAnnounced
         rejectedBy
         acceptedBy
+        isRescheduled
+      }
+    }
+  }
+`;
+export const publishMeetingReschedule = `
+mutation MeetingsUpdate($id: ID!, $input: MeetingsUpdateInput!) {
+    meetingsUpdate(by: {id: $id},input: $input) {
+      meetings {
+        isRescheduled
       }
     }
   }

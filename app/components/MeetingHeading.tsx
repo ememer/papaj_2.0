@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { parseDate } from "../utils/createDate";
 import UserVote from "./UserVote";
+import RescheduleMeeting from "./RescheduleMeeting";
 
 interface Props {
   meetings: MeetingInterface;
@@ -12,6 +13,9 @@ interface Props {
 
 const MeetingHeading = ({ meetings, user }: Props) => {
   const router = useRouter();
+
+  const userId = user?.id ?? "";
+
   return (
     <>
       {meetings && (
@@ -71,38 +75,47 @@ const MeetingHeading = ({ meetings, user }: Props) => {
               </div>
             </div>
           )}
-          {!meetings?.isAnnounced &&
-            user?.email === meetings?.createdBy?.email && (
-              <div className="w-full grid grid-cols-2 gap-2 text-gray-800">
-                <button
-                  onClick={async () => {
-                    const { token } = await fetchToken();
-                    handleDelete(meetings?.id, token);
-                    router.refresh();
-                  }}
-                  className="w-3/4 mx-auto block my-2 font-semibold bg-red-400 rounded-md px-4 py-2"
-                >
-                  Anuluj
-                </button>
-                <button
-                  onClick={async () => {
-                    const { token } = await fetchToken();
-                    updateMeeting(meetings?.id, true, [user?.id], null, token);
-                    router.refresh();
-                  }}
-                  className="w-3/4 mx-auto block my-2 font-semibold bg-green-400 rounded-md px-4 py-2"
-                >
-                  Powiadom
-                </button>
-              </div>
-            )}
+          {/* {!meetings?.isAnnounced && */}
+          {true && user?.email === meetings?.createdBy?.email && (
+            <div className="w-full grid grid-cols-2 gap-2 text-gray-800">
+              <button
+                onClick={async () => {
+                  const { token } = await fetchToken();
+                  handleDelete(meetings?.id, token);
+                  router.refresh();
+                }}
+                className="w-3/4 mx-auto font-semibold button_warning"
+              >
+                Anuluj
+              </button>
+              <button
+                onClick={async () => {
+                  const { token } = await fetchToken();
+                  updateMeeting(meetings?.id, true, [user?.id], null, token);
+                  router.refresh();
+                }}
+                className="w-3/4 mx-auto font-semibold button_success"
+              >
+                Powiadom
+              </button>
+            </div>
+          )}
           {meetings?.isAnnounced && (
-            <UserVote
-              userId={user?.id}
-              meetingId={meetings?.id}
-              usersAccepted={meetings?.acceptedBy}
-              usersRejected={meetings?.rejectedBy}
-            />
+            <>
+              <UserVote
+                userId={user?.id}
+                meetingId={meetings?.id}
+                usersAccepted={meetings.acceptedBy}
+                usersRejected={meetings.rejectedBy}
+              />
+              {meetings?.rejectedBy?.includes(userId) && (
+                <RescheduleMeeting
+                rescheduledDays={meetings?.reschedules?.edges}
+                  isRescheduled={meetings?.isRescheduled}
+                  meetingId={meetings?.id}
+                />
+              )}
+            </>
           )}
         </div>
       )}

@@ -1,53 +1,100 @@
 import { fetchToken, updateMeeting } from "@/lib/actions";
-import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UserVotes } from "./UserVote";
+import clsx from "clsx";
+import { useRouter } from "next/navigation";
 
 interface Props {
   userVotes: UserVotes;
   meetingId: string;
   userId: string;
+  onClickIsLoaded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const VoteButtonsSection = ({ userVotes, meetingId, userId }: Props) => {
+const VoteButtonsSection = ({
+  userVotes,
+  meetingId,
+  userId,
+  onClickIsLoaded,
+}: Props) => {
+  const [isUserAccepted, setIsUserAccepted] = useState<boolean | true>(true);
+  const [isUserRejected, setIsUserRejected] = useState<boolean | true>(true);
+  const acceptedList = userVotes?.acceptedBy ?? [];
+  const rejectedList = userVotes?.rejectedBy ?? [];
   const router = useRouter();
+  useEffect(() => {
+    const isUserAccepted = acceptedList?.some(
+      (user) => user?.node?.id === userId
+    );
+    const isUserRejected = rejectedList?.some(
+      (user) => user?.node?.id === userId
+    );
+
+    setIsUserRejected(isUserAccepted);
+    setIsUserAccepted(isUserRejected);
+  }, [userVotes.rejectedBy, userVotes.acceptedBy]);
+
   return (
     <div className="col-span-2 w-full">
-      <div className="grid grid-cols-2 gap-4">
-        <button
-          className="w-3/4 text-slate-800 font-semibold m-auto p-2 text-center bg-red-400 rounded-md"
-          onClick={async () => {
-            const { token } = await fetchToken();
-            updateMeeting(
-              meetingId,
-              true,
-              [...userVotes.acceptedBy.map((user) => user?.node?.id), userId],
-              [...userVotes.rejectedBy.map((user) => user?.node?.id), userId],
-              token
-            );
-            router.refresh();
-          }}
-        >
-          Nie moge
-        </button>
-        <button
-          className="w-3/4 text-slate-800 font-semibold m-auto p-2 text-center bg-green-400 rounded-md"
-          onClick={async () => {
-            const { token } = await fetchToken();
-            updateMeeting(
-              meetingId,
-              true,
-              [...userVotes.acceptedBy.map((user) => user.node.id), userId],
-              [...userVotes.rejectedBy.map((user) => user.node.id), userId],
-              token
-            );
-            router.refresh();
-          }}
-        >
-          Jescze jak!
-        </button>
+      <div
+        className={clsx(
+          isUserAccepted || isUserRejected ? "grid-cols-1" : "grid-cols-2",
+          "grid gap-4"
+        )}
+      >
+        {!isUserAccepted && (
+          <button
+            className={clsx(
+              isUserAccepted && "mx-auto",
+              "text-slate-800 w-3/4 font-semibold m-auto text-center button_warning"
+            )}
+            onClick={async () => {
+              const { token } = await fetchToken();
+              await updateMeeting(
+                meetingId,
+                true,
+                [
+                  ...acceptedList
+                    .filter((users) => users?.node?.id !== userId)
+                    .map((users) => users?.node?.id),
+                ],
+                [...rejectedList.map((user) => user?.node?.id), userId],
+                token
+              ).then(() => {
+                onClickIsLoaded(false), router.refresh();
+              });
+            }}
+          >
+            {!isUserAccepted ? "Muszę zrezygnować" : "Nie moge"}
+          </button>
+        )}
+        {!isUserRejected && (
+          <button
+            className={clsx(
+              isUserRejected && "mx-auto",
+              "w-3/4 text-slate-800 font-semibold m-auto text-center button_success"
+            )}
+            onClick={async () => {
+              const { token } = await fetchToken();
+              await updateMeeting(
+                meetingId,
+                true,
+                [...acceptedList.map((user) => user.node.id), userId],
+                [
+                  ...rejectedList
+                    .filter((users) => users?.node?.id !== userId)
+                    .map((users) => users?.node?.id),
+                ],
+                token
+              ).then(() => {
+                onClickIsLoaded(false), router.refresh();
+              });
+            }}
+          >
+            {!isUserRejected ? "Będę, jeszcze jak!" : "Jeszcze jak!"}
+          </button>
+        )}
       </div>
-      <button className="bg-teal-300 block p-2 m-auto text-slate-800 font-semibold w-3/4 rounded-md my-8">Zaproponuj inny termin</button>
     </div>
   );
 };

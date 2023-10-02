@@ -6,7 +6,7 @@ import { DateTime } from "luxon";
 import { createDisabledDays, disableDays } from "../utils/lockDays";
 import { MeetingInterface, SessionInterface } from "@/common.types";
 import { createNewMeeting, fetchToken } from "@/lib/actions";
-import { redirect, useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 import clsx from "clsx";
 import MeetingHeading from "./MeetingHeading";
 interface Props {
@@ -19,7 +19,7 @@ type CalendarType = {
   range: Array<Date | null>;
 };
 
-const CalendarContainer = ({ user, meetings }: Props) => {
+const MeetingCalendar = ({ user, meetings }: Props) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isPilgrimage, setIsPilgrimage] = useState(false);
@@ -101,7 +101,7 @@ const CalendarContainer = ({ user, meetings }: Props) => {
       <div
         className={clsx(
           "grid",
-          Object.keys(meetings).length > 0
+          meetings && Object.keys(meetings).length > 0
             ? "grid-cols-1 lg:grid-cols-2"
             : "grid-cols-1"
         )}
@@ -120,7 +120,7 @@ const CalendarContainer = ({ user, meetings }: Props) => {
                 key={isPilgrimage.toString()}
                 returnValue={isPilgrimage ? "range" : "start"}
                 selectRange={isPilgrimage}
-                className="mx-auto rounded-lg overflow-hidden"
+                className="calendar"
                 locale="PL"
                 onClickDay={(date) => handleSetDayOrRange(date)}
                 onActiveStartDateChange={({ activeStartDate }) =>
@@ -200,4 +200,4 @@ const CalendarContainer = ({ user, meetings }: Props) => {
   );
 };
 
-export default CalendarContainer;
+export default MeetingCalendar;

@@ -1,11 +1,13 @@
 import { SessionInterface } from "@/common.types";
 import {
+  createManyReschedulesDates,
   createNewMeetingMutation,
   createUserMutation,
   deleteMeetingDate,
   getNewMeetingDate,
   getUserCollectionQuery,
   getUserQuery,
+  publishMeetingReschedule,
   updateMeetingQuery,
 } from "@/graphql";
 import { GraphQLClient } from "graphql-request";
@@ -33,7 +35,7 @@ export const makeGraphqlRequest = async (query: string, variables = {}) => {
   }
 };
 
-export const getUser = (email: string) => {
+export const getUser = async (email: string) => {
   client.setHeader("x-api-key", API_KEY);
   return makeGraphqlRequest(getUserQuery, { email });
 };
@@ -87,7 +89,7 @@ export const createNewMeeting = (
   return makeGraphqlRequest(createNewMeetingMutation, variables);
 };
 
-export const getLatestMeeting = () => {
+export const getLatestMeeting = async () => {
   client.setHeader("x-api-key", API_KEY);
   return makeGraphqlRequest(getNewMeetingDate);
 };
@@ -124,4 +126,40 @@ export const updateMeeting = async (
     },
   };
   return makeGraphqlRequest(updateMeetingQuery, variables);
+};
+
+export const updateMeetingWithReschedule = async (
+  id: string,
+  token: string
+) => {
+  client.setHeader("Authorization", `Bearer ${token}`);
+  const variables = {
+    id: id,
+    input: {
+      isRescheduled: true,
+    },
+  };
+  return makeGraphqlRequest(publishMeetingReschedule, variables);
+};
+
+export const createReschedulesVotes = async (
+  token: string,
+  meetingId: string,
+  rescheduleDates: string[]
+) => {
+  client.setHeader("Authorization", `Bearer ${token}`);
+  const variables = {
+    input: [
+      ...rescheduleDates.map((dateString) => ({
+        input: {
+          date: dateString,
+          meeting: {
+            link: meetingId,
+          },
+        },
+      })),
+    ],
+  };
+
+  return makeGraphqlRequest(createManyReschedulesDates, variables);
 };
