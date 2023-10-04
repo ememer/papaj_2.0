@@ -1,6 +1,6 @@
 import { g, auth, config } from "@grafbase/sdk";
 
-// @ts-ignore
+// @ts-ignore //
 const User = g
   .model("User", {
     name: g.string().length({ min: 3, max: 20 }),
@@ -12,7 +12,7 @@ const User = g
     rules.public().read();
   });
 
-// @ts-ignore
+// @ts-ignore //
 const Reschedules = g
   .model("Reschedules", {
     date: g.string(),
@@ -24,7 +24,7 @@ const Reschedules = g
     rules.private().create().update().delete();
   });
 
-// @ts-ignore
+// @ts-ignore //
 const Meetings = g
   .model("Meetings", {
     createdBy: g.relation(() => User),
