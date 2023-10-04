@@ -6,4 +6,5 @@ export const accessedUsers = [
   "kamilporwit93@gmail.com",
   "michal.sopel1@gmail.com",
   "rak.michal94@gmail.com",
+  "ehs.partner.bhp@gmail.com"
 ];

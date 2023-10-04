@@ -1,4 +1,3 @@
-import { SessionInterface } from "@/common.types";
 import {
   createManyReschedulesDates,
   createNewMeetingMutation,
