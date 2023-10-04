@@ -54,7 +54,7 @@ export default async function Home() {
         {isAccesed && (
           <div className="col-span-2 mx-auto mb-auto mt-16 text-center items-center flex flex-col">
             <Link
-              href="/watykan"
+              href="/niemajeszczetrasy"
               title="Przjedź do watykanu"
               className="globe border-4 border-white rounded-full overflow-hidden w-24 h-24 mt-auto"
             >
